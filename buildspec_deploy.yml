@@ -10,7 +10,7 @@ phases:
     commands:
       - echo Logging in to Expo...
       - export EXPO_TOKEN=$(aws ssm get-parameter --name "/softech/expo/token" --with-decryption --query "Parameter.Value" --output text)
-      - ehco $EXPO_TOKEN
+      - echo $EXPO_TOKEN
       - echo Initializing Repo...
       - git init
   build:
