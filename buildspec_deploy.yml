@@ -28,8 +28,8 @@ phases:
       - npx eas-cli build --platform android --profile preview --non-interactive --no-wait
   post_build:
     commands:
-      - sleep 5m
+      # - sleep 5m
       - echo Sending build details to SNS...
-      - export BUILD_URL=$(eas build:list --status finished --limit 1 --non-interactive | grep 'Logs' | awk '{print $2}')
+      - export BUILD_URL=$(eas build:list --status new --limit 1 --non-interactive | grep 'Logs' | awk '{print $2}')
       - echo $BUILD_URL
       - aws sns publish --topic-arn arn:aws:sns:us-east-1:489673021092:john-test-topic --message "EAS Build Completed. Build details $BUILD_URL"
