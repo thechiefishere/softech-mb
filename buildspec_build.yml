@@ -1,0 +1,28 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+    commands:
+      - npm install -g eas-cli
+  pre_build:
+    commands:
+      - echo Logging in to Expo...
+      - export EXPO_TOKEN=$(aws ssm get-parameter --name "/softech/expo/token" --with-decryption --query "Parameter.Value" --output text)
+      - ehco $EXPO_TOKEN
+      - echo Initializing Repo...
+      - git init
+  build:
+    commands:
+      - echo installing dependencies
+      - npm install
+      - echo Building the app...
+      - npx eas-cli build --platform android --profile preview --non-interactive --no-wait
+  post_build:
+    commands:
+      - sleep 5m
+      - echo Sending build details to SNS...
+      - export BUILD_URL=$(eas build:list --status finished --limit 1 --non-interactive | grep 'Logs' | awk '{print $2}')
+      - echo $BUILD_URL
+      - aws sns publish --topic-arn arn:aws:sns:us-east-1:489673021092:john-test-topic --message "EAS Build Completed. Build details $BUILD_URL"
