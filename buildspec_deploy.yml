@@ -1,17 +1,17 @@
 version: 0.2
 
-env:
-  variables:
-    NPM_CONFIG_PREFIX: $HOME/.npm-global
+# env:
+#   variables:
+#     NPM_CONFIG_PREFIX: $HOME/.npm-global
 
 phases:
   install:
     runtime-versions:
       nodejs: 14
     commands:
-      - echo "Configuring npm to use a different directory..."
-      - mkdir -p $HOME/.npm-global
-      - export PATH=$HOME/.npm-global/bin:$PATH
+      # - echo "Configuring npm to use a different directory..."
+      # - mkdir -p $HOME/.npm-global
+      # - export PATH=$HOME/.npm-global/bin:$PATH
       - npm install -g eas-cli
   pre_build:
     commands:
@@ -28,7 +28,7 @@ phases:
       - npx eas-cli build --platform android --profile preview --non-interactive --no-wait
   post_build:
     commands:
-      - sleep 5m
+      - sleep 15m
       - echo Sending build details to SNS...
       - export BUILD_URL=$(eas build:list --status finished --limit 1 --non-interactive | grep 'Logs' | awk '{print $2}')
       - echo $BUILD_URL
