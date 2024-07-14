@@ -1,10 +1,17 @@
 version: 0.2
 
+env:
+  variables:
+    NPM_CONFIG_PREFIX: $HOME/.npm-global
+
 phases:
   install:
     runtime-versions:
       nodejs: 14
     commands:
+      - echo "Configuring npm to use a different directory..."
+      - mkdir -p $HOME/.npm-global
+      - export PATH=$HOME/.npm-global/bin:$PATH
       - npm install -g eas-cli
   pre_build:
     commands:
